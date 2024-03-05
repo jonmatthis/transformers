@@ -30,7 +30,7 @@ def detect_and_crop_objects_from_videos(
         ret, frame = cap.read()
         if not ret:
             break
-        if frame_count % 30*2 != 0:
+        if frame_count % (30*2) != 0:
             print(f"Skipping frame {frame_count} of {total_frames}")
             frame_count += 1
             continue
