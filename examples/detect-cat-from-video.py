@@ -17,7 +17,6 @@ def detect_and_crop_objects_from_videos(
     object_list: List[str],
     output_folder: str,
     crop_scale: float = 1.2,
-    frames_to_crop_per_second: float = 1,
 ) -> None:
     # Initialize video capture
     video_name = Path(video_path).stem
@@ -31,7 +30,7 @@ def detect_and_crop_objects_from_videos(
         ret, frame = cap.read()
         if not ret:
             break
-        if frame_count % 30 != 0:
+        if frame_count % 30*2 != 0:
             print(f"Skipping frame {frame_count} of {total_frames}")
             frame_count += 1
             continue
@@ -47,6 +46,7 @@ def detect_and_crop_objects_from_videos(
 
         # zero pad the frame count to ensure the images are sorted correctly
         frame_count_str = str(frame_count).zfill(6)
+        total_frames_str = str(total_frames).zfill(6)
 
         for detection in detections:
             if detection["label"] in object_list:
@@ -54,9 +54,9 @@ def detect_and_crop_objects_from_videos(
                     frame=rgb_frame,
                     box=detection["box"],
                     scale=crop_scale,
-                    output_path=f"{output_folder}/{video_name}/{detection['label']}/{detection['label']}_frame_{frame_count_str}.png",
+                    output_path=f"{output_folder}/{video_name}_{detection['label']}_frame_{frame_count_str}_of_{total_frames_str}.png",
                 )
-                print(f"Saved {detection['label']} from video {video_name} at frame {frame_count} of {total_frames}")
+                print(f"Saved {detection['label']} from video {video_name} at frame {frame_count} of {total_frames_str}")
 
         frame_count += 1
     cap.release()
@@ -97,7 +97,7 @@ if __name__ == "__main__":
         r"C:\Users\jonma\Sync\videos\2024-03-03-pooh-5GoPro-5k@30fps-Linear-22deg"
     )
     object_list = ["cat"]
-    output_folder = r"C:\Users\jonma\Sync\videos\2024-03-03-pooh-5GoPro-5k@30fps-Linear-22deg\cropped-objects"
+    output_folder = r"C:\Users\jonma\Sync\videos\2024-03-03-pooh-5GoPro-5k@30fps-Linear-22deg\cat-crops"
 
     object_detector = pipeline("object-detection")
 
