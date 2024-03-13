@@ -6,7 +6,6 @@ from typing import List
 import cv2
 import numpy as np
 from PIL import Image
-from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 
 from transformers import pipeline
 
